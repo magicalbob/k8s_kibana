@@ -33,10 +33,10 @@ envsubst < kibana.pv.yml.template > kibana.pv.yml
 kubectl apply -f kibana.pv.yml
 
 # Do rest of applies
-kubectl apply -f ks01-service.yml
-kubectl apply -f ks01-deployment.yml
-kubectl apply -f ks02-service.yml
-kubectl apply -f ks02-deployment.yml
+kubectl apply -f es01-service.yml
+kubectl apply -f es01-deployment.yml
+kubectl apply -f es02-service.yml
+kubectl apply -f es02-deployment.yml
 kubectl apply -f kibana-service.yml
 kubectl apply -f kibana-deployment.yml
 
