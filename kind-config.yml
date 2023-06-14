@@ -1,8 +1,0 @@
-kind: Cluster
-apiVersion: kind.x-k8s.io/v1alpha4
-nodes:
-- role: control-plane
-  extraMounts:
-  - hostPath: /Users/ian/Documents/src/k8s_kibana/elasticsearch-data
-    containerPath: /mnt/elasticsearch-data
-

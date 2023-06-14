@@ -27,18 +27,11 @@ then
     kubectl create namespace kibana
 fi
 
-# sort out persistent volume
-export NODE_NAME=$(kubectl get nodes |grep control-plan|cut -d\  -f1)
-envsubst < kibana.pv.yml.template > kibana.pv.yml
-kubectl apply -f kibana.pv.yml
+## sort out persistent volume - not used at the moment so sommented out for now
+#export NODE_NAME=$(kubectl get nodes |grep control-plan|cut -d\  -f1)
+#envsubst < kibana.pv.yml.template > kibana.pv.yml
+#kubectl apply -f kibana.pv.yml
 
-# Do rest of applies
-kubectl apply -f es01-service.yml
-kubectl apply -f es01-deployment.yml
-kubectl apply -f es02-service.yml
-kubectl apply -f es02-deployment.yml
-kubectl apply -f kibana-service.yml
-kubectl apply -f kibana-deployment.yml
 
 # check status
 kubectl get all -n kibana
