@@ -33,7 +33,12 @@ fi
 #kubectl apply -f kibana.pv.yml
 
 # Install custom resource definitions
-kubectl create -f https://download.elastic.co/downloads/eck/2.8.0/crds.yaml
+# Based on https://download.elastic.co/downloads/eck/2.8.0/crds.yaml
+kubectl create -f crds.yaml
+
+# Install the operator with its RBAC rules
+# Based on https://download.elastic.co/downloads/eck/2.8.0/operator.yaml
+kubectl apply -f operator.yaml
 
 # check status
 kubectl get all -n kibana
