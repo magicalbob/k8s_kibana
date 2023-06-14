@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kibana-deployment
+  namespace: kibana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kibana
+  template:
+    metadata:
+      labels:
+        app: kibana
+    spec:
+      containers:
+        - name: kibana
+          image: docker.elastic.co/kibana/kibana:7.2.0
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          env:
+            - name: server.name
+              value: "kibana"
+            - name: server.host
+              value: "0"
+            - name: elasticsearch.hosts
+              value: "http://es01:9200"
+            - name: xpack.monitoring.ui.container.elasticsearch.enabled
+              value: "true"
+          ports:
+            - containerPort: 5601
+
