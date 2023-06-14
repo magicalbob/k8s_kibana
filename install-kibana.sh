@@ -32,6 +32,8 @@ fi
 #envsubst < kibana.pv.yml.template > kibana.pv.yml
 #kubectl apply -f kibana.pv.yml
 
+# Install custom resource definitions
+kubectl create -f https://download.elastic.co/downloads/eck/2.8.0/crds.yaml
 
 # check status
 kubectl get all -n kibana
