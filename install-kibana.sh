@@ -40,8 +40,20 @@ kubectl create -f crds.yaml
 # Based on https://download.elastic.co/downloads/eck/2.8.0/operator.yaml
 kubectl apply -f operator.yaml
 
-# Install elastic search cluster
+# Install elasticsearch cluster
 kubectl apply -f elasticsearch-cluster.yaml
 
-# check status
-kubectl get all -n kibana
+# Wait for elastic search pod
+until kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana 2>/dev/null  > /dev/null; do sleep 5; echo waiting; done
+until kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana -o yaml|grep "phase: Running"; do sleep 5; echo waiting; done
+kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana
+
+# Setup port forward for elasticsearch cluster
+kubectl port-forward service/quickstart-es-http 9200 --address 127.0.0.1 -n kibana &
+
+# get password for the elasticsearch cluster
+PASSWORD=$(kubectl get secret quickstart-es-elastic-user -n kibana -o go-template='{{.data.elastic | base64decode}}')
+
+# curl the elasticsearch
+until curl -fu "elastic:$PASSWORD" -k "https://127.0.0.1:9200" 2>/dev/null > /dev/null; do sleep 5; echo waiting; done
+curl -u "elastic:$PASSWORD" -k "https://127.0.0.1:9200"
