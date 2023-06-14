@@ -24,7 +24,7 @@ spec:
             - name: node.name
               value: "es02"
             - name: discovery.seed_hosts
-              value: "es01"
+              value: "es02"
             - name: cluster.initial_master_nodes
               value: "es01,es02"
             - name: cluster.name
@@ -36,7 +36,7 @@ spec:
           ports:
             - containerPort: 9200
           volumeMounts:
-            - name: es01-data
+            - name: es02-data
               mountPath: /usr/share/elasticsearch/data
       volumes:
         - name: es02-data
