@@ -40,5 +40,8 @@ kubectl create -f crds.yaml
 # Based on https://download.elastic.co/downloads/eck/2.8.0/operator.yaml
 kubectl apply -f operator.yaml
 
+# Install elastic search cluster
+kubectl apply -f elasticsearch-cluster.yaml
+
 # check status
 kubectl get all -n kibana
