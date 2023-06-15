@@ -42,8 +42,8 @@ kubectl apply -f https://download.elastic.co/downloads/eck/2.8.0/operator.yaml
 kubectl apply -f elasticsearch-cluster.yaml
 
 # Wait for elastic search pod
-until kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana 2>/dev/null  > /dev/null; do sleep 5; echo waiting; done
-until kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana -o yaml|grep "phase: Running"; do sleep 5; echo waiting; done
+until kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana 2>/dev/null  > /dev/null; do sleep 5; echo waiting for elasticsearch pod; done
+until kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana -o yaml|grep "phase: Running"; do sleep 5; echo waiting for elasticsearch running; done
 kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana
 
 # Setup port forward for elasticsearch cluster
@@ -70,3 +70,17 @@ curl -u "elastic:$PASSWORD" -k "https://127.0.0.1:9200"
 kubectl create configmap kibana-config --from-file=kibana.yml -n kibana
 kubectl apply -f kibana.deployment.yaml
 kubectl apply -f kibana.service.yaml
+
+# Setup port forward for kibana
+while true; do
+  # Check if kubectl port-forward is still running
+  if ! pgrep -f "kubectl port-forward service/kibana-service 5601 --address 127.0.0.1 -n kibana"; then
+    echo "Relaunching 'kubectl port-forward'..."
+    kubectl port-forward service/kibana-service 5601 --address 127.0.0.1 -n kibana &
+    sleep 5 # Give it a moment to start up
+  fi
+
+  # Your other script contents here...
+
+  sleep 10 # Sleep for a while before checking again
+done 2>&1 > /dev/null  &
