@@ -58,7 +58,7 @@ while true; do
   # Your other script contents here...
 
   sleep 10 # Sleep for a while before checking again
-done &
+done 2>&1 > /dev/null  &
 
 # get password for the elasticsearch cluster
 PASSWORD=$(kubectl get secret quickstart-es-elastic-user -n kibana -o go-template='{{.data.elastic | base64decode}}')
