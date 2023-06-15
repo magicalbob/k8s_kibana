@@ -10,3 +10,9 @@ spec:
     count: 1
     config:
       node.store.allow_mmap: false
+    podTemplate:
+      spec:
+        containers:
+        - name: elasticsearch
+          image: nexus.ellisbs.co.uk:8084/elasticsearch:8.8.1
+

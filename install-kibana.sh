@@ -66,3 +66,7 @@ PASSWORD=$(kubectl get secret quickstart-es-elastic-user -n kibana -o go-templat
 # curl the elasticsearch
 until curl -fu "elastic:$PASSWORD" -k "https://127.0.0.1:9200" 2>/dev/null > /dev/null; do sleep 5; echo waiting; done
 curl -u "elastic:$PASSWORD" -k "https://127.0.0.1:9200"
+
+kubectl create configmap kibana-config --from-file=kibana.yml -n kibana
+kubectl apply -f kibana.deployment.yaml
+kubectl apply -f kibana.service.yaml
