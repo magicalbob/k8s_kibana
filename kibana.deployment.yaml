@@ -15,6 +15,17 @@ spec:
     spec:
       containers:
       - name: kibana
+        env:
+        - name: ELASTICSEARCH_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: quickstart-es-elastic-user
+              key: elastic
+        - name: ELASTICSEARCH_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: quickstart-es-elastic-user
+              key: elastic
         image:  nexus.ellisbs.co.uk:8084/kibana:8.8.1
         ports:
         - containerPort: 5601
