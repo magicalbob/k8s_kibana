@@ -33,12 +33,10 @@ fi
 #kubectl apply -f kibana.pv.yml
 
 # Install custom resource definitions
-# Based on https://download.elastic.co/downloads/eck/2.8.0/crds.yaml
-kubectl create -f crds.yaml
+kubectl create -f https://download.elastic.co/downloads/eck/2.8.0/crds.yaml
 
 # Install the operator with its RBAC rules
-# Based on https://download.elastic.co/downloads/eck/2.8.0/operator.yaml
-kubectl apply -f operator.yaml
+kubectl apply -f https://download.elastic.co/downloads/eck/2.8.0/operator.yaml
 
 # Install elasticsearch cluster
 kubectl apply -f elasticsearch-cluster.yaml
@@ -49,7 +47,18 @@ until kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=qui
 kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstart' -n kibana
 
 # Setup port forward for elasticsearch cluster
-kubectl port-forward service/quickstart-es-http 9200 --address 127.0.0.1 -n kibana &
+while true; do
+  # Check if kubectl port-forward is still running
+  if ! pgrep -f "kubectl port-forward service/quickstart-es-http 9200 --address 127.0.0.1 -n kibana"; then
+    echo "Relaunching 'kubectl port-forward'..."
+    kubectl port-forward service/quickstart-es-http 9200 --address 127.0.0.1 -n kibana &
+    sleep 5 # Give it a moment to start up
+  fi
+
+  # Your other script contents here...
+
+  sleep 10 # Sleep for a while before checking again
+done &
 
 # get password for the elasticsearch cluster
 PASSWORD=$(kubectl get secret quickstart-es-elastic-user -n kibana -o go-template='{{.data.elastic | base64decode}}')
