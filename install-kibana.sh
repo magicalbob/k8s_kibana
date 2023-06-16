@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-PRIMARY_IP=$(ifconfig |grep 192| awk '/inet /{print $2; exit}')
+export PRIMARY_IP=$(ifconfig |grep 192| awk '/inet /{print $2; exit}')
 echo "Primary IP Address is ${PRIMARY_IP}"
 
 # Make sure kind cluster exists
@@ -54,9 +54,9 @@ kubectl get pods --selector='elasticsearch.k8s.elastic.co/cluster-name=quickstar
 # Setup port forward for elasticsearch cluster
 while true; do
   # Check if kubectl port-forward is still running
-  if ! pgrep -f "kubectl port-forward service/quickstart-es-http 9200 --address 127.0.0.1 -n kibana"; then
+  if ! pgrep -f "kubectl port-forward service/quickstart-es-http 9200 --address $PRIMARY_IP -n kibana"; then
     echo "Relaunching 'kubectl port-forward'..."
-    kubectl port-forward service/quickstart-es-http 9200 --address 127.0.0.1 -n kibana &
+    kubectl port-forward service/quickstart-es-http 9200 --address $PRIMARY_IP -n kibana &
     sleep 5 # Give it a moment to start up
   fi
 
@@ -66,11 +66,14 @@ while true; do
 done 2>&1 > /dev/null  &
 
 # get password for the elasticsearch cluster
-PASSWORD=$(kubectl get secret quickstart-es-elastic-user -n kibana -o go-template='{{.data.elastic | base64decode}}')
+export PASSWORD=$(kubectl get secret quickstart-es-elastic-user -n kibana -o go-template='{{.data.elastic | base64decode}}')
 
 # curl the elasticsearch
 until curl -fu "elastic:$PASSWORD" -k "https://127.0.0.1:9200" 2>/dev/null > /dev/null; do sleep 5; echo waiting; done
 curl -u "elastic:$PASSWORD" -k "https://127.0.0.1:9200"
+
+# get kabana.yml from template
+envsubst < kibana.yml.template > kibana.yml
 
 kubectl create configmap kibana-config --from-file=kibana.yml -n kibana
 kubectl apply -f kibana.deployment.yaml
