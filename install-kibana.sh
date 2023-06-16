@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+PRIMARY_IP=$(ifconfig |grep 192| awk '/inet /{print $2; exit}')
+echo "Primary IP Address is ${PRIMARY_IP}"
+
 # Make sure kind cluster exists
 kind  get clusters 2>&1 | grep "kind-kibana"
 if [ $? -gt 0 ]
