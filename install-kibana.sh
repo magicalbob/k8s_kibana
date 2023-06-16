@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # Make sure kind cluster exists
 kind  get clusters 2>&1 | grep "kind-kibana"
 if [ $? -gt 0 ]
