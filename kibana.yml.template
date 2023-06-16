@@ -5,3 +5,7 @@ xpack.monitoring.ui.container.elasticsearch.enabled: true
 elasticsearch.username: elastic
 elasticsearch.password: $PASSWORD
 xpack.security.encryptionKey: 'NhOj6DYSH4eY4mk5yKFaRFQ++JEXF/E4d+vpj8MEbOui'
+xpack.encryptedSavedObjects.encryptionKey: 'rHh/0iH/xNiGywdDi2BdNj34mdR70BKndyCt1QH09dl1'
+xpack.reporting.encryptionKey: 'CDLex2lKto7KyzdhSI2BQn6JfkvaFryTtjXScPV1Q6oW'
+xpack.reporting.kibanaServer.hostname: "localhost"
+
