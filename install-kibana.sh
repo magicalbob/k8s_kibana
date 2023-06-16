@@ -69,8 +69,8 @@ done 2>&1 > /dev/null  &
 export PASSWORD=$(kubectl get secret quickstart-es-elastic-user -n kibana -o go-template='{{.data.elastic | base64decode}}')
 
 # curl the elasticsearch
-until curl -fu "elastic:$PASSWORD" -k "https://127.0.0.1:9200" 2>/dev/null > /dev/null; do sleep 5; echo waiting; done
-curl -u "elastic:$PASSWORD" -k "https://127.0.0.1:9200"
+until curl -fu "elastic:$PASSWORD" -k "https://$PRIMARY_IP:9200" 2>/dev/null > /dev/null; do sleep 5; echo waiting; done
+curl -u "elastic:$PASSWORD" -k "https://$PRIMARY_IP:9200"
 
 # get kabana.yml from template
 envsubst < kibana.yml.template > kibana.yml
