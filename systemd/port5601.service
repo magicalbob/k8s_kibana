@@ -1,0 +1,15 @@
+[Unit]
+Description=Kubectl Port Forward 5601
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+User=vagrant
+Group=vagrant
+Type=simple
+ExecStart=/bin/bash -c "kubectl port-forward  service/kibana -n kibana --address 192.168.200.201 5601:5601"
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
