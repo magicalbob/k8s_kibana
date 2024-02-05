@@ -26,7 +26,7 @@ spec:
             secretKeyRef:
               name: quickstart-es-elastic-user
               key: elastic
-        image:  nexus.ellisbs.co.uk:8084/kibana:8.8.1
+        image:  kibana:8.8.1
         ports:
         - containerPort: 5601
         volumeMounts:
